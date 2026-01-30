@@ -1,4 +1,7 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class InGameUI : MonoBehaviour
@@ -37,7 +40,19 @@ public class InGameUI : MonoBehaviour
     {
         return tutorial.activeSelf && options.activeSelf;
     }
-    
-    
+
+    void OpenPauseMenu()
+    {
+        PauseManager.Pause();
+        panel.SetActive(true);
+    }
+
+    private void Update()
+    {
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            OpenPauseMenu();
+        }
+    }
 }
 
