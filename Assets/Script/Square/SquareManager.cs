@@ -23,7 +23,7 @@ public class SquareManager : MonoBehaviour
 
     private void Start()
     {
-        // StartCoroutine(SpawnPassants());
+        StartCoroutine(SpawnPassants());
     }
 
     private IEnumerator SpawnPassants()

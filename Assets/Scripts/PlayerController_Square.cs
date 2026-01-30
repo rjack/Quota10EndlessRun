@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,11 +21,16 @@ public class PlayerController_Square : MonoBehaviour
     }
 
 
-    void Update()
+    private void Update()
+    {
+        transform.Rotate(0, currDir.x * rSpeed, 0);
+    }
+
+    void FixedUpdate()
     {
 
         _rb.linearVelocity = transform.forward * forwardSpeed;
-        _rb.transform.Rotate(0, currDir.x * rSpeed, 0);
+        
 
         //_rb.linearVelocity = new Vector3(currDir.x * speed, 0 , forwardSpeed);
         //_rb.transform.forward = new Vector3(currDir.x * speed, 0, forwardSpeed).normalized;
