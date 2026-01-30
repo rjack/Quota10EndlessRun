@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CartManager : MonoBehaviour
@@ -6,6 +7,24 @@ public class CartManager : MonoBehaviour
     public static event Action<Passant> OnCartCollided = delegate { };
 
     [SerializeField, Min(0)] private int bodies;
+    [SerializeField] private List<MeshRenderer> bodyRenderers;
+    [Tooltip("How many points should be reached each time to show more bodies on cart?")]
+    [SerializeField, Min(1)] private int showBodyFactor = 1;
+
+    private void Awake()
+    {
+        ScoreManager.OnScoreChanged += HandleBodyRenderers;
+    }
+
+    private void Start()
+    {
+        HandleBodyRenderers(0);
+    }
+
+    private void OnDestroy()
+    {
+        ScoreManager.OnScoreChanged -= HandleBodyRenderers;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -16,6 +35,14 @@ public class CartManager : MonoBehaviour
             OnCartCollided?.Invoke(hitPassant);
             hitPassant.gameObject.SetActive(false);
         }
-        
+    }
+
+    private void HandleBodyRenderers(int newScore)
+    {
+        int amountToShow = newScore % showBodyFactor;
+        for(int i = 0; i < bodyRenderers.Count; i++)
+        {
+            bodyRenderers[i].enabled = i < amountToShow;
+        }
     }
 }
