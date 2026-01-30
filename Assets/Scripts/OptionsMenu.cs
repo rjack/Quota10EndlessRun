@@ -1,49 +1,56 @@
-using System;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class OptionsMenu : MonoBehaviour
 {
   [SerializeField] private AudioMixer sfxMixer;
   [SerializeField] private AudioMixer musicMixer;
+
+  [SerializeField] private Slider sfxSlider;
+  [SerializeField] private Slider musicSlider;
+
+  [SerializeField] private TextMeshProUGUI sfxText;
+  [SerializeField] private TextMeshProUGUI musicText;
   
-  [SerializeField] private TextMeshProUGUI sfxTxt;
-  [SerializeField] private TextMeshProUGUI musicTxt;
+  private const string SFX_KEY = "sfxVolume";
+  private const string MUSIC_KEY = "musicVolume";
 
-  public void SetSfxVolume(Single volume)
+  public void SetSfxVolume(float value)
   {
-    float vol = math.log10(volume) * 20f;
-    sfxMixer.SetFloat("sfxVolume",vol);
-    PlayerPrefs.SetFloat("sfxVolume", vol);
+    float dB = Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20f;
+    sfxMixer.SetFloat("sfxVolume", dB);
+    PlayerPrefs.SetFloat(SFX_KEY, value); 
+    UpdateVolumeText(sfxText,value);
   }
 
-  public void SetMusicVolume(Single volume)
+  public void SetMusicVolume(float value)
   {
-    float vol = math.log10(volume) * 20f;
-    musicMixer.SetFloat("musicVolume",vol);
-    PlayerPrefs.SetFloat("musicVolume", vol);
+    float dB = Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20f;
+    musicMixer.SetFloat("musicVolume", dB);
+    PlayerPrefs.SetFloat(MUSIC_KEY, value); 
+    UpdateVolumeText(musicText,value);
   }
-
 
   private void Awake()
   {
-    if (PlayerPrefs.HasKey("musicVolume"))
-    {
-      SetMusicVolume(PlayerPrefs.GetFloat("musicVolume"));
-    }
+    float musicValue = PlayerPrefs.GetFloat(MUSIC_KEY, 0.4f);
+    float sfxValue   = PlayerPrefs.GetFloat(SFX_KEY, 0.4f);
+
+    musicSlider.SetValueWithoutNotify(musicValue);
+    sfxSlider.SetValueWithoutNotify(sfxValue);
+
+    SetMusicVolume(musicValue);
+    SetSfxVolume(sfxValue);
+  }
+  
+  private void UpdateVolumeText(TextMeshProUGUI txt, float value)
+  {
+    if (value <= 0.001f)
+      txt.text = "MUTED";
     else
-    {
-      SetMusicVolume(0.4f);
-    }
-    if (PlayerPrefs.HasKey("sfxVolume"))
-    {
-      SetSfxVolume(PlayerPrefs.GetFloat("sfxVolume"));
-    }
-    else
-    {
-      SetSfxVolume(0.4f);
-    }
+      txt.text = Mathf.RoundToInt(value * 100f) + "%";
   }
 }
