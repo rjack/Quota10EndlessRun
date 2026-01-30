@@ -47,6 +47,11 @@ public class InGameUI : MonoBehaviour
         panel.SetActive(true);
     }
 
+    private void Awake()
+    {
+        Time.timeScale = 1f;
+    }
+
     private void Update()
     {
         if (Keyboard.current.escapeKey.wasPressedThisFrame)

@@ -24,9 +24,4 @@ using UnityEngine;
       IsPaused = false;
       Time.timeScale = IsPaused ? 0f : 1f;
     }
-
-    private void Awake()
-    {
-      DontDestroyOnLoad(gameObject);
-    }
   }
