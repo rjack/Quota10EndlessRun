@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class EndlessSegment : MonoBehaviour
 {
+    public GameObject Start;
+    public GameObject Finish;
   [Header("Init")]
   [SerializeField] private List<SideObject> objects;
   [SerializeField] private GraphicType type;
