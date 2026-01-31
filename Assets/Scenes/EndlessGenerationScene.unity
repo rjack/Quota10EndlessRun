@@ -14,10 +14,10 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
+  m_Fog: 1
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.028
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 54fe2f000ad8f424fb63cc3ea0ae2bb2, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -434,6 +434,16 @@ GameObject:
 --- !u!1 &190950223 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8309186122486272524, guid: c183121d62bb3bd41b92d597ab9c0748, type: 3}
+  m_PrefabInstance: {fileID: 5283276029842171470}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &190950224 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8052534698454767276, guid: c183121d62bb3bd41b92d597ab9c0748, type: 3}
+  m_PrefabInstance: {fileID: 5283276029842171470}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &190950225 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 4441744687055534280, guid: c183121d62bb3bd41b92d597ab9c0748, type: 3}
   m_PrefabInstance: {fileID: 5283276029842171470}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &211321376
@@ -2053,6 +2063,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2777482425863911097, guid: c183121d62bb3bd41b92d597ab9c0748, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 190950225}
+    - target: {fileID: 2777482425863911097, guid: c183121d62bb3bd41b92d597ab9c0748, type: 3}
+      propertyPath: audioSourceWalk
+      value: 
+      objectReference: {fileID: 190950224}
     - target: {fileID: 4486009825767184919, guid: c183121d62bb3bd41b92d597ab9c0748, type: 3}
       propertyPath: m_Enabled
       value: 1
