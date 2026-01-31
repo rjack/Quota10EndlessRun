@@ -9,12 +9,12 @@ public class DifficultyManager : MonoBehaviour
 
     private void Awake()
     {
-        EntryPoint.OnPlayerEnterOnEntryPoint += IncreaseCounter;
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint += IncreaseCounter;
     }
 
     private void OnDestroy()
     {
-        EntryPoint.OnPlayerEnterOnEntryPoint -= IncreaseCounter;
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint -= IncreaseCounter;
     }
 
     private void IncreaseCounter()
