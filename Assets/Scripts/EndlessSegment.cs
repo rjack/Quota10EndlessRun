@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class EndlessSegment : MonoBehaviour
 {
+    public GameObject Start;
+    public GameObject Finish;
   [Header("Init")]
   [SerializeField] private List<SideObject> objects;
   [SerializeField] private GraphicType type;
@@ -23,7 +25,7 @@ public class EndlessSegment : MonoBehaviour
     {
       foreach (var graph in obj.graphics)
       {
-        graph.gameObject.SetActive(graph.graphicType == graphicType);
+        graph.gO.SetActive(graph.graphicType == graphicType);
       }
     }
     

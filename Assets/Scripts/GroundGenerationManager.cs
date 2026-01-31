@@ -32,15 +32,14 @@ public class GroundGenerationManager : MonoBehaviour
     [SerializeField] private float worldSpeed = 15f;
 
 
-    private List<GameObject> squareStaticSegments = new();
-    private List<GameObject> activeGroundSegments = new();
-    private SpawnPattern currentSpawnPattern;
-    private GameObject activeSquare;
-    private int spawnPatternCounter = -1;
-    private int counterSegmentsLeft = 100;
-    private float squareEntryZ;
-    private float squareStartTransform;
-
+    public List<GameObject> activeGroundSegments = new();
+    public SpawnPattern currentSpawnPattern;
+    public GameObject activeSquare;
+    public int spawnPatternCounter = -1;
+    public int counterSegmentsLeft = 1;
+    public float lastWorldSpeed;
+    private float destroySquare = 1f;
+    private bool isSquareActive = false;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -48,9 +47,10 @@ public class GroundGenerationManager : MonoBehaviour
     {
         currentSpawnPattern = patternPool.GetRandomPattern();
         activeGroundSegments.AddRange(groundSegments);
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint += OnSquareEnter;
+        ExitSquarePoint.OnPlayerEnterOnExitPoint += OnSquareExit;
     }
-
-    // Update is called once per frame
+        // Update is called once per frame
     void Update()
     {
         switch (state)
@@ -72,8 +72,40 @@ public class GroundGenerationManager : MonoBehaviour
 
     }
 
+    void OnSquareEnter()
+    {
+        lastWorldSpeed = worldSpeed;
+        worldSpeed = 0f;
+        SpawnEndSquareChunks();
+        state = WorldState.InSquare;
+        Debug.Log("In Square STATE");
+    }
+
+    void OnSquareExit()
+    {
+        worldSpeed = lastWorldSpeed;
+        counterSegmentsLeft = 5; // reset segments to run before next square
+        state = WorldState.Running;
+        activeGroundSegments.Clear();
+        activeGroundSegments.AddRange(groundSegments);
+        activeGroundSegments.Add(activeSquare);
+        activeSquare = null;
+        Debug.Log("Square Exited: resetting to RUNNING state");
+    }
+
     void MoveWorld()
     {
+        if (isSquareActive)
+        {
+            destroySquare -= Time.deltaTime;
+            if (destroySquare <= 0f)
+            {
+                Destroy(activeSquare);
+                isSquareActive = false;
+                destroySquare = 1f;
+            }
+        }
+        Debug.Log("Moving world at speed: " + worldSpeed);
         Vector3 delta = Vector3.back * worldSpeed * Time.deltaTime;
 
         foreach (GameObject seg in activeGroundSegments)
@@ -104,13 +136,6 @@ public class GroundGenerationManager : MonoBehaviour
         {
             PrepareSquare();
         }
-
-        if (PlayerPassedSquareEntry())
-        {
-            SpawnEndSquareChunks();
-            state = WorldState.InSquare;
-            Debug.Log("In Square STATE");
-        }
     }
 
     void AlignStaticToDynamic(List<GameObject> dynamicList, List<GameObject> staticList)
@@ -132,13 +157,21 @@ public class GroundGenerationManager : MonoBehaviour
         (groundSegments, groundSegments_static) =
             (groundSegments_static, groundSegments);
 
-        // piazza i segmenti in fondo
-        float scale = 2 * activeGroundSegments[0].transform.lossyScale.x;
+        Transform exitPoint = activeSquare.transform.Find("ExitSquarePoint");
 
-        // distanziali in base alla grandezza della piazza
-        PopAndPushGround(groundSegments, 0, scale);
+        GameObject firstChunk = groundSegments[0];
+
+        // rimuovilo temporaneamente dalla lista
+        groundSegments.RemoveAt(0);
+
+        // posizionamento preciso
+        firstChunk.transform.position = exitPoint.position;
+
+        // reinserisci in fondo
+        groundSegments.Add(firstChunk);
+
         // distanzia gli altri 3 in base alla lunghezza dei segmenti
-        scale = groundSegments[0].transform.lossyScale.x;
+        float scale = 48f;
         for (int i=0; i<3; i++)
         {
             PopAndPushGround(groundSegments, 0, scale);
@@ -146,28 +179,28 @@ public class GroundGenerationManager : MonoBehaviour
     }
 
 
-    // creates square prefab and adds the condition to enter the new state
+    // creates and positions square prefab
     void PrepareSquare()
     {
         GameObject lastSegment = groundSegments[^1];
 
-        Vector3 spawnPos =
-            lastSegment.transform.position +
-            Vector3.forward * squarePrefab.transform.lossyScale.z;
+        float lastChunkEndZ = lastSegment.transform.position.z + 48f;
 
-        activeSquare = Instantiate(squarePrefab, spawnPos, Quaternion.identity);
+        activeSquare = Instantiate(squarePrefab, Vector3.zero, Quaternion.identity);
+        Transform startEntry = activeSquare.transform.Find("EntrySquarePoint");
+        float offsetZ = activeSquare.transform.position.z - startEntry.position.z;
+
+        Vector3 squarePos = new Vector3(
+        lastSegment.transform.position.x,
+        lastSegment.transform.position.y,
+        lastChunkEndZ + offsetZ
+        );
+        activeSquare.transform.position = squarePos;
+
         // add square to active segments for movement
         activeGroundSegments.Add(activeSquare);
 
         Debug.Log("Square prepared");
-    }
-
-    // checks if player passed the square entry point
-    bool PlayerPassedSquareEntry()
-    {
-        squareStartTransform = activeSquare.transform.position.z - activeSquare.transform.lossyScale.z;
-        Debug.Log("Player Z: " + transform.position.z + " Square Entry Z: " + squareStartTransform);
-        return transform.position.z >= squareStartTransform;
     }
 
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SideObject : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class SideObject : MonoBehaviour
 public class SegmentGraphics
 {
    public GraphicType graphicType;
-   public GameObject gameObject;
+   [FormerlySerializedAs("gameObject")] public GameObject gO;
 }
 
 public enum GraphicType
@@ -19,5 +20,6 @@ public enum GraphicType
    COL_CIRCLE_THIN,
    COL_CIRCLE_3WAY,
    COL_SQUARE,
-   COL_MEDIEVAL
+   COL_MEDIEVAL,
+   COL_SQUARE_BLOCKS
 }
