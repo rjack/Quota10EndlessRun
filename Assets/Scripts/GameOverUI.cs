@@ -40,9 +40,9 @@ public class GameOverUI : MonoBehaviour
       {
          highScoreTxt.text = "Run Score: " + scoreManager.GetCurrentScoreTheatre();
          highScoreTxt.gameObject.SetActive(true);
-         highScoreTxt.GetComponent<RectTransform>().DOPunchScale(punch, 1);
+         highScoreTxt.GetComponent<RectTransform>().DOPunchScale(punch, 1).SetUpdate(true);
          returnToMainMenuBtn.gameObject.SetActive(true);
-         returnToMainMenuBtn.GetComponent<CanvasGroup>().DOFade(1f, 1.2f);
+         returnToMainMenuBtn.GetComponent<CanvasGroup>().DOFade(1f, 1.2f).SetUpdate(true);
       });
       
    }
