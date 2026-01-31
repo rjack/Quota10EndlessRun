@@ -1,23 +1,22 @@
 using System;
 using UnityEngine;
 
-public class EntryPoint : MonoBehaviour
+public class DepositPoint : MonoBehaviour
 {
     [SerializeField] private float radius = 2.5f;
-    public static Action OnPlayerEnterOnEntryPoint;
+    public static Action OnPlayerEnterOnDepositPoint;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            OnPlayerEnterOnEntryPoint?.Invoke();
-            this.gameObject.SetActive(false);
+            OnPlayerEnterOnDepositPoint?.Invoke();
         }
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, radius);
     }
 }

@@ -36,46 +36,18 @@ public class SquareManager : MonoBehaviour
             playerController = player.GetComponent<PlayerController>();
             playerController_Square = player.GetComponent<PlayerController_Square>();
         }
-
-        if (entryPoint != null)
-        {
-            entryPoint.OnPlayerEnter += () =>
-            {
-                //if (playerController != null && playerController_Square != null)
-                //{
-                //    playerController.enabled = false;
-                //    playerController_Square.enabled = true;
-                //}
-
-                InitiateSquare();
-            };
-        }
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        // StartCoroutine(SpawnPassants());
+        EntryPoint.OnPlayerEnterOnEntryPoint += HandlePlayerEntering;
+        // nextStagePoint.OnPlayerEnterOnNextStagePoint += OnNextStagePoint;
     }
 
-    private void Update()
+    private void OnDisable()
     {
-        // For testing purposes, press the 'S' key to change controller of player.
-        //if (Keyboard.current.sKey.wasPressedThisFrame)
-        //{
-        //    if (playerController != null && playerController_Square != null)
-        //    {
-        //        if (playerController.enabled)
-        //        {
-        //            playerController.enabled = false;
-        //            playerController_Square.enabled = true;
-        //        }
-        //        else
-        //        {
-        //            playerController.enabled = true;
-        //            playerController_Square.enabled = false;
-        //        }
-        //    }
-        //}
+        EntryPoint.OnPlayerEnterOnEntryPoint -= HandlePlayerEntering;
+        // nextStagePoint.OnPlayerEnterOnNextStagePoint -= OnNextStagePoint;
     }
 
     private IEnumerator SpawnPassants()
@@ -150,10 +122,19 @@ public class SquareManager : MonoBehaviour
         currentPedestrianCount++;
     }
 
-    private void InitiateSquare()
+    private void HandlePlayerEntering()
     {
         Debug.Log("Player entered the square. Initiating square...");
-        entryPoint.gameObject.SetActive(false);
         StartCoroutine(SpawnPassants());
     }
+
+    //private void OnDepositPoint()
+    //{
+    //    Debug.Log("Player entered the deposit point.");
+    //}
+    
+    //private void OnNextStagePoint()
+    //{
+    //    Debug.Log("Player entered the Next Stage Point");
+    //}
 }
