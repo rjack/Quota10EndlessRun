@@ -29,12 +29,13 @@ public class PlayerController_Endless : MonoBehaviour
     private float baseZ;
     private float targetZ;
     private bool returning = false;
-
+    public static bool isDead = false;
 
     public Action OnPlayerDeath;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
+        isDead = false;
         rb = GetComponent<Rigidbody>();
         
         InputManager.OnPlayerMovement += HandlePlayerInput;
@@ -104,6 +105,8 @@ public class PlayerController_Endless : MonoBehaviour
 
     private void HandlePlayerJump()
     {
+        if (isDead) return;
+        
         if (!isGrounded)
             return;
         
@@ -120,6 +123,9 @@ public class PlayerController_Endless : MonoBehaviour
 
     void FixedUpdate()
     {
+
+        if (isDead) return;
+        
         if (rb.linearVelocity.y < 0)
         {
             // falls faster
@@ -149,7 +155,9 @@ public class PlayerController_Endless : MonoBehaviour
             hp--;
             if (hp <= 0)
             {
+                isDead = true;
                 OnPlayerDeath?.Invoke();
+                
             }
             else
             {
@@ -158,6 +166,7 @@ public class PlayerController_Endless : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("OneshotObstacle"))
         {
+            isDead = true;
             OnPlayerDeath?.Invoke();
         }
         
@@ -180,6 +189,7 @@ public class PlayerController_Endless : MonoBehaviour
 
     private void HandlePlayerInput(Vector2 movementInput)
     {
+        if (isDead) return;
         if (movementInput.x > 0.5f)
             ChangeLane(1);
         else if (movementInput.x < -0.5f)
