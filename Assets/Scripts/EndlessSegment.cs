@@ -23,7 +23,7 @@ public class EndlessSegment : MonoBehaviour
     {
       foreach (var graph in obj.graphics)
       {
-        graph.gameObject.SetActive(graph.graphicType == graphicType);
+        graph.gO.SetActive(graph.graphicType == graphicType);
       }
     }
     

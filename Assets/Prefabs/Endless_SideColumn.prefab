@@ -83,13 +83,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   graphics:
   - graphicType: 0
-    gameObject: {fileID: 7141104008264974502}
+    gO: {fileID: 7141104008264974502}
   - graphicType: 1
-    gameObject: {fileID: 4301522970325753290}
+    gO: {fileID: 4301522970325753290}
   - graphicType: 2
-    gameObject: {fileID: 7137956916847400362}
+    gO: {fileID: 7137956916847400362}
   - graphicType: 3
-    gameObject: {fileID: 56386050573053485}
+    gO: {fileID: 56386050573053485}
+  - graphicType: 4
+    gO: {fileID: 7109776603211528549}
 --- !u!1 &4301522970325753290
 GameObject:
   m_ObjectHideFlags: 0
