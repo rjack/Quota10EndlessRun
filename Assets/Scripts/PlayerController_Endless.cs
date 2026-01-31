@@ -1,9 +1,8 @@
 using TMPro;
 using UnityEditor;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController_Endless : MonoBehaviour
 {
     [SerializeField] private float laneOffset = 2.5f;
     [SerializeField] private float laneChangeSpeed = 10f;
@@ -37,7 +36,11 @@ public class PlayerController : MonoBehaviour
         
         InputManager.OnPlayerMovement += HandlePlayerInput;
         InputManager.OnPlayerJump += HandlePlayerJump;
-        
+
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint += HandleEnterOnSquare;
+
+        ExitSquarePoint.OnPlayerEnterOnExitPoint += HandleExitOnSquare;
+
         targetPosition = transform.position;
         originPoint = transform.forward;
 
@@ -50,6 +53,10 @@ public class PlayerController : MonoBehaviour
     {
         InputManager.OnPlayerMovement -= HandlePlayerInput;
         InputManager.OnPlayerJump -= HandlePlayerJump;
+
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint -= HandleEnterOnSquare;
+
+        ExitSquarePoint.OnPlayerEnterOnExitPoint -= HandleExitOnSquare;
     }
 
     // Update is called once per frame
@@ -186,6 +193,16 @@ public class PlayerController : MonoBehaviour
             transform.position.y,
             transform.position.z
         );
+    }
+
+    private void HandleEnterOnSquare()
+    {
+        this.enabled = false;
+    }
+
+    private void HandleExitOnSquare()
+    {
+        this.enabled = true;
     }
 
     private void OnDrawGizmos()

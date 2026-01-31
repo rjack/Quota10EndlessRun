@@ -18,44 +18,37 @@ public class GroundGenerationManager : MonoBehaviour
 
     private WorldState state = WorldState.Running;
 
-    [SerializeField] private List<GameObject> groundSegments_Middle = new();
-    [SerializeField] private List<GameObject> groundSegments_Left = new();
-    [SerializeField] private List<GameObject> groundSegments_Right = new();
+    [SerializeField] private List<GameObject> groundSegments = new();
+
     // questi vengono usati quando si cambia alla square mode
-    [SerializeField] private List <GameObject> groundSegments_Middle_static = new();
-    [SerializeField] private List<GameObject> groundSegments_Left_static = new();
-    [SerializeField] private List<GameObject> groundSegments_Right_static = new();
+    [SerializeField] private List <GameObject> groundSegments_static = new();
 
     [SerializeField] private GameObject squarePrefab;
     [SerializeField] private PatternPool patternPool;
     [SerializeField] private float squareEntryOffset = 5f;
     //[SerializeField] private float segmentLength = 20f;
-    [FormerlySerializedAs("offset")] [SerializeField] private float destroyAtZ = -30.0f;
+    [FormerlySerializedAs("offset")] [SerializeField] private float destroyAtZ = -100.0f;
     //[SerializeField] private GameObject obstaclePrefab;
     [SerializeField] private float worldSpeed = 15f;
 
 
-    private List<GameObject> squareStaticSegments = new();
-    private List<GameObject> activeGroundSegments = new();
-    private SpawnPattern currentSpawnPattern;
-    private GameObject activeSquare;
-    private int spawnPatternCounter = -1;
-    private int counterSegmentsLeft = 5;
-    private float squareEntryZ;
-    private float squareStartTransform;
-
+    public List<GameObject> activeGroundSegments = new();
+    public SpawnPattern currentSpawnPattern;
+    public GameObject activeSquare;
+    public int spawnPatternCounter = -1;
+    public int counterSegmentsLeft = 1;
+    public float lastWorldSpeed;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
         currentSpawnPattern = patternPool.GetRandomPattern();
-        activeGroundSegments.AddRange(groundSegments_Left);
-        activeGroundSegments.AddRange(groundSegments_Middle);
-        activeGroundSegments.AddRange(groundSegments_Right);
+        activeGroundSegments.AddRange(groundSegments);
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint += OnSquareEnter;
+        ExitSquarePoint.OnPlayerEnterOnExitPoint += OnSquareExit;
     }
-
-    // Update is called once per frame
+        // Update is called once per frame
     void Update()
     {
         switch (state)
@@ -77,6 +70,25 @@ public class GroundGenerationManager : MonoBehaviour
 
     }
 
+    void OnSquareEnter()
+    {
+        lastWorldSpeed = worldSpeed;
+        worldSpeed = 0f;
+        SpawnEndSquareChunks();
+        state = WorldState.InSquare;
+        Debug.Log("In Square STATE");
+    }
+
+    void OnSquareExit()
+    {
+        worldSpeed = lastWorldSpeed;
+        counterSegmentsLeft = 5; // reset segments to run before next square
+        state = WorldState.Running;
+        activeGroundSegments.Remove(activeSquare);
+        activeSquare = null;
+        Debug.Log("Square Exited: resetting to RUNNING state");
+    }
+
     void MoveWorld()
     {
         Vector3 delta = Vector3.back * worldSpeed * Time.deltaTime;
@@ -90,7 +102,7 @@ public class GroundGenerationManager : MonoBehaviour
     // running state, subway surfer shit
     void UpdateRunning()
     {
-        if (groundSegments_Middle[0].transform.position.z < destroyAtZ)
+        if (groundSegments[0].transform.position.z < destroyAtZ)
         {
             AdvanceChunk();
         }
@@ -109,13 +121,6 @@ public class GroundGenerationManager : MonoBehaviour
         {
             PrepareSquare();
         }
-
-        if (PlayerPassedSquareEntry())
-        {
-            SpawnEndSquareChunks();
-            state = WorldState.InSquare;
-            Debug.Log("In Square STATE");
-        }
     }
 
     void AlignStaticToDynamic(List<GameObject> dynamicList, List<GameObject> staticList)
@@ -132,60 +137,55 @@ public class GroundGenerationManager : MonoBehaviour
 
     void SpawnEndSquareChunks()
     {
-        AlignStaticToDynamic(groundSegments_Left, groundSegments_Left_static);
-        AlignStaticToDynamic(groundSegments_Middle, groundSegments_Middle_static);
-        AlignStaticToDynamic(groundSegments_Right, groundSegments_Right_static);
+        AlignStaticToDynamic(groundSegments, groundSegments_static);
 
-        (groundSegments_Left, groundSegments_Left_static) =
-            (groundSegments_Left_static, groundSegments_Left);
+        (groundSegments, groundSegments_static) =
+            (groundSegments_static, groundSegments);
 
-        (groundSegments_Middle, groundSegments_Middle_static) =
-            (groundSegments_Middle_static, groundSegments_Middle);
+        Transform exitPoint = activeSquare.transform.Find("ExitSquarePoint");
 
-        (groundSegments_Right, groundSegments_Right_static) =
-            (groundSegments_Right_static, groundSegments_Right);
+        GameObject firstChunk = groundSegments[0];
 
+        // rimuovilo temporaneamente dalla lista
+        groundSegments.RemoveAt(0);
 
-        // piazza i segmenti in fondo
-        float scale = 2 * activeGroundSegments[0].transform.lossyScale.x;
+        // posizionamento preciso
+        firstChunk.transform.position = exitPoint.position;
 
-        // distanziali in base alla grandezza della piazza
-        PopAndPushGround(groundSegments_Left, 0, scale);
-        PopAndPushGround(groundSegments_Middle, 1, scale);
-        PopAndPushGround(groundSegments_Right, 2, scale);
+        // reinserisci in fondo
+        groundSegments.Add(firstChunk);
+
         // distanzia gli altri 3 in base alla lunghezza dei segmenti
-        scale = groundSegments_Middle[0].transform.lossyScale.x;
+        float scale = 48f;
         for (int i=0; i<3; i++)
         {
-            PopAndPushGround(groundSegments_Left, 0, scale);
-            PopAndPushGround(groundSegments_Middle, 1, scale);
-            PopAndPushGround(groundSegments_Right, 2, scale);
+            PopAndPushGround(groundSegments, 0, scale);
         }
     }
 
 
-    // creates square prefab and adds the condition to enter the new state
+    // creates and positions square prefab
     void PrepareSquare()
     {
-        GameObject lastSegment = groundSegments_Middle[^1];
+        GameObject lastSegment = groundSegments[^1];
 
-        Vector3 spawnPos =
-            lastSegment.transform.position +
-            Vector3.forward * squarePrefab.transform.lossyScale.z;
+        float lastChunkEndZ = lastSegment.transform.position.z + 48f;
 
-        activeSquare = Instantiate(squarePrefab, spawnPos, Quaternion.identity);
+        activeSquare = Instantiate(squarePrefab, Vector3.zero, Quaternion.identity);
+        Transform startEntry = activeSquare.transform.Find("EntrySquarePoint");
+        float offsetZ = activeSquare.transform.position.z - startEntry.position.z;
+
+        Vector3 squarePos = new Vector3(
+        lastSegment.transform.position.x,
+        lastSegment.transform.position.y,
+        lastChunkEndZ + offsetZ
+        );
+        activeSquare.transform.position = squarePos;
+
         // add square to active segments for movement
         activeGroundSegments.Add(activeSquare);
 
         Debug.Log("Square prepared");
-    }
-
-    // checks if player passed the square entry point
-    bool PlayerPassedSquareEntry()
-    {
-        squareStartTransform = activeSquare.transform.position.z - activeSquare.transform.lossyScale.z;
-        Debug.Log("Player Z: " + transform.position.z + " Square Entry Z: " + squareStartTransform);
-        return transform.position.z >= squareStartTransform;
     }
 
 
@@ -199,10 +199,8 @@ public class GroundGenerationManager : MonoBehaviour
             currentSpawnPattern = patternPool.GetRandomPattern();
         }
 
-        float scale = groundSegments_Middle[0].transform.lossyScale.x; //todo apply to new models
-        PopAndPushGround(groundSegments_Left, 0, scale);
-        PopAndPushGround(groundSegments_Middle, 1, scale);
-        PopAndPushGround(groundSegments_Right, 2, scale);
+        float scale = 48f; //todo apply to new models
+        PopAndPushGround(groundSegments, 0, scale);
     }
 
 
@@ -219,11 +217,11 @@ public class GroundGenerationManager : MonoBehaviour
         groundSegment.RemoveAt(0); //rimuovo quello dietro
 
         // clear anchors/obstacles
-        Transform newSegmentAnchor = newSegment.transform.GetChild(0);
-        for (int i = newSegmentAnchor.childCount - 1; i >= 0; i--)
-        {
-            Destroy(newSegmentAnchor.GetChild(i).gameObject); //distrugge tutti gli ostacoli
-        }
+        //Transform newSegmentAnchor = newSegment.transform.GetChild(0);
+        //for (int i = newSegmentAnchor.childCount - 1; i >= 0; i--)
+        //{
+        //    Destroy(newSegmentAnchor.GetChild(i).gameObject); //distrugge tutti gli ostacoli
+        //}
 
         //list has count  4 
         GameObject lastSegment = groundSegment[^1];

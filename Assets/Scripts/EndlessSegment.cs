@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class EndlessSegment : MonoBehaviour
 {
   [Header("Init")]
-  [SerializeField] private List<SegmentGraphics> graphics;
+  [SerializeField] private List<SideObject> objects;
   [SerializeField] private GraphicType type;
   private void Update()
   {
@@ -14,30 +14,20 @@ public class EndlessSegment : MonoBehaviour
     {
       ActivateObjects(type);
     }
+    
   }
 
   private void ActivateObjects(GraphicType graphicType)
   {
-    foreach (var objectSegm in graphics)
+    foreach (var obj in objects)
     {
-      objectSegm.gameObject.SetActive(objectSegm.graphicType == graphicType);
+      foreach (var graph in obj.graphics)
+      {
+        graph.gameObject.SetActive(graph.graphicType == graphicType);
+      }
     }
+    
     
   }
 }
 
-
-[Serializable]
-public class SegmentGraphics
-{
-  public GraphicType graphicType;
-  public GameObject gameObject;
-}
-
-public enum GraphicType
-{
-  COL_CIRCLE_THIN,
-  COL_CIRCLE_3WAY,
-  COL_SQUARE,
-  COL_MEDIEVAL
-}

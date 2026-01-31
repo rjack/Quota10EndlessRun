@@ -13,6 +13,12 @@ public class PlayerController_Square : MonoBehaviour
 
     Rigidbody _rb;
 
+    void Awake()
+    {
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint += HandleEntryOnSquare;
+
+        ExitSquarePoint.OnPlayerEnterOnExitPoint += HandleExitOnSquare;
+    }
 
     void Start()
     {
@@ -36,6 +42,20 @@ public class PlayerController_Square : MonoBehaviour
     private void OnDestroy()
     {
         InputManager.OnPlayerMovement -= HandlePlayerInput;
+
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint -= HandleEntryOnSquare;
+
+        ExitSquarePoint.OnPlayerEnterOnExitPoint -= HandleExitOnSquare;
+    }
+
+    private void HandleEntryOnSquare()
+    {
+        this.enabled = true;
+    }
+
+    private void HandleExitOnSquare()
+    {
+        this.enabled = false;
     }
 
     private void HandlePlayerInput(Vector2 dir)
