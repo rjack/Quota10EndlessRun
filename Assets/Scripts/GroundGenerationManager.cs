@@ -21,6 +21,11 @@ public class GroundGenerationManager : MonoBehaviour
     [SerializeField] private List<GameObject> groundSegments_Middle = new();
     [SerializeField] private List<GameObject> groundSegments_Left = new();
     [SerializeField] private List<GameObject> groundSegments_Right = new();
+    // questi vengono usati quando si cambia alla square mode
+    [SerializeField] private List <GameObject> groundSegments_Middle_static = new();
+    [SerializeField] private List<GameObject> groundSegments_Left_static = new();
+    [SerializeField] private List<GameObject> groundSegments_Right_static = new();
+
     [SerializeField] private GameObject squarePrefab;
     [SerializeField] private PatternPool patternPool;
     [SerializeField] private float squareEntryOffset = 5f;
@@ -107,27 +112,43 @@ public class GroundGenerationManager : MonoBehaviour
 
         if (PlayerPassedSquareEntry())
         {
-            CacheSquareStaticChunks();
-            SpawnSquareRunnerChunks();
+            SpawnEndSquareChunks();
             state = WorldState.InSquare;
             Debug.Log("In Square STATE");
         }
     }
 
-    void CacheSquareStaticChunks()
+    void AlignStaticToDynamic(List<GameObject> dynamicList, List<GameObject> staticList)
     {
-        squareStaticSegments.Clear();
+        int count = Mathf.Min(dynamicList.Count, staticList.Count);
 
-        foreach (GameObject seg in activeGroundSegments)
+        for (int i = 0; i < count; i++)
         {
-            squareStaticSegments.Add(seg);
+            staticList[i].transform.position =
+                dynamicList[i].transform.position;
         }
     }
 
-    void SpawnSquareRunnerChunks()
+
+    void SpawnEndSquareChunks()
     {
+        AlignStaticToDynamic(groundSegments_Left, groundSegments_Left_static);
+        AlignStaticToDynamic(groundSegments_Middle, groundSegments_Middle_static);
+        AlignStaticToDynamic(groundSegments_Right, groundSegments_Right_static);
+
+        (groundSegments_Left, groundSegments_Left_static) =
+            (groundSegments_Left_static, groundSegments_Left);
+
+        (groundSegments_Middle, groundSegments_Middle_static) =
+            (groundSegments_Middle_static, groundSegments_Middle);
+
+        (groundSegments_Right, groundSegments_Right_static) =
+            (groundSegments_Right_static, groundSegments_Right);
+
+
         // piazza i segmenti in fondo
         float scale = 2 * activeGroundSegments[0].transform.lossyScale.x;
+
         // distanziali in base alla grandezza della piazza
         PopAndPushGround(groundSegments_Left, 0, scale);
         PopAndPushGround(groundSegments_Middle, 1, scale);
