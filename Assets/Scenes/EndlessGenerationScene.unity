@@ -160,12 +160,13 @@ MonoBehaviour:
   - {fileID: 444923141}
   - {fileID: 1489296515}
   squarePrefab: {fileID: 5472695336979700349, guid: 9975666824ed8bd4c97b0ab601c42da1, type: 3}
-  patternPool: {fileID: 19225738}
+  spawnPattern: {fileID: 0}
   squareEntryOffset: 5
   playerPrefab: {fileID: 0}
   destroyAtZ: -50
   worldSpeed: 50
   activeGroundSegments: []
+  activePatterns: []
   currentSpawnPattern: {fileID: 0}
   activeSquare: {fileID: 0}
   spawnPatternCounter: -1
@@ -346,6 +347,16 @@ Camera:
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2106666612022226462, guid: 9156f84583a81be6b88a430f43d05284, type: 3}
   m_PrefabInstance: {fileID: 1931835107}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &120394441 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 4441744687055534280, guid: c183121d62bb3bd41b92d597ab9c0748, type: 3}
+  m_PrefabInstance: {fileID: 5283276029842171470}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &120394448 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8052534698454767276, guid: c183121d62bb3bd41b92d597ab9c0748, type: 3}
+  m_PrefabInstance: {fileID: 5283276029842171470}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &161424993
 GameObject:
@@ -1937,6 +1948,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2777482425863911097, guid: c183121d62bb3bd41b92d597ab9c0748, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 120394441}
+    - target: {fileID: 2777482425863911097, guid: c183121d62bb3bd41b92d597ab9c0748, type: 3}
+      propertyPath: audioSourceWalk
+      value: 
+      objectReference: {fileID: 120394448}
     - target: {fileID: 4486009825767184919, guid: c183121d62bb3bd41b92d597ab9c0748, type: 3}
       propertyPath: m_Enabled
       value: 1
