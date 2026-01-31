@@ -7,7 +7,6 @@ public class InputManager : MonoBehaviour
     public static event Action<Vector2> OnPlayerMovement = delegate { };
     public void OnMove(InputValue value)
     {
-
         if (PauseManager.IsPaused) return;
         
         Vector2 inputValue = value.Get<Vector2>();

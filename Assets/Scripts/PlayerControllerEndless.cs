@@ -38,6 +38,18 @@ public class PlayerController : MonoBehaviour
         InputManager.OnPlayerMovement += HandlePlayerInput;
         InputManager.OnPlayerJump += HandlePlayerJump;
         
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint += () =>
+        {
+            // Disable Component when entering the square
+            this.enabled = false;
+        };
+
+        ExitSquarePoint.OnPlayerEnterOnExitPoint += () =>
+        {
+            // Enable Component when exiting the square
+            this.enabled = true;
+        };
+
         targetPosition = transform.position;
         originPoint = transform.forward;
 
@@ -50,6 +62,18 @@ public class PlayerController : MonoBehaviour
     {
         InputManager.OnPlayerMovement -= HandlePlayerInput;
         InputManager.OnPlayerJump -= HandlePlayerJump;
+
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint -= () =>
+        {
+            // Disable Component when entering the square
+            this.enabled = false;
+        };
+
+        ExitSquarePoint.OnPlayerEnterOnExitPoint -= () =>
+        {
+            // Enable Component when exiting the square
+            this.enabled = true;
+        };
     }
 
     // Update is called once per frame

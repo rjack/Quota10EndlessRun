@@ -1,22 +1,22 @@
 using System;
 using UnityEngine;
 
-public class NextStagePoint : MonoBehaviour
+public class DepositTheatrePoint : MonoBehaviour
 {
     [SerializeField] private float radius = 2.5f;
-    public static Action OnPlayerEnterOnNextStagePoint;
+    public static Action OnPlayerEnterOnDepositPoint;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            OnPlayerEnterOnNextStagePoint?.Invoke();
+            OnPlayerEnterOnDepositPoint?.Invoke();
         }
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, radius);
     }
 }

@@ -20,34 +20,18 @@ public class SquareManager : MonoBehaviour
     [SerializeField] private float percentOtherPedestrians = 0.4f;
     [SerializeField] private float percentPolicePedestrians = 0.1f;
 
-    [SerializeField] private EntryPoint entryPoint;
-
-    private GameObject player;
-    private PlayerController playerController;
-    private PlayerController_Square playerController_Square;
-
-    private void Awake()
-    {
-        // Find the player GameObject by Layer
-        player = GameObject.FindGameObjectWithTag("Player");
-
-        if (player != null)
-        {
-            playerController = player.GetComponent<PlayerController>();
-            playerController_Square = player.GetComponent<PlayerController_Square>();
-        }
-    }
+    [SerializeField] private Collider southGate;
 
     private void OnEnable()
     {
-        EntryPoint.OnPlayerEnterOnEntryPoint += HandlePlayerEntering;
-        // nextStagePoint.OnPlayerEnterOnNextStagePoint += OnNextStagePoint;
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint += HandlePlayerEntering;
+
+        southGate.enabled = false;
     }
 
     private void OnDisable()
     {
-        EntryPoint.OnPlayerEnterOnEntryPoint -= HandlePlayerEntering;
-        // nextStagePoint.OnPlayerEnterOnNextStagePoint -= OnNextStagePoint;
+        EntrySquarePoint.OnPlayerEnterOnEntryPoint -= HandlePlayerEntering;
     }
 
     private IEnumerator SpawnPassants()
@@ -122,19 +106,16 @@ public class SquareManager : MonoBehaviour
         currentPedestrianCount++;
     }
 
+    private IEnumerator CloseEntrySquare()
+    {
+        yield return new WaitForSeconds(1f);
+        southGate.enabled = true;
+    }
+
     private void HandlePlayerEntering()
     {
         Debug.Log("Player entered the square. Initiating square...");
+        StartCoroutine(CloseEntrySquare());
         StartCoroutine(SpawnPassants());
     }
-
-    //private void OnDepositPoint()
-    //{
-    //    Debug.Log("Player entered the deposit point.");
-    //}
-    
-    //private void OnNextStagePoint()
-    //{
-    //    Debug.Log("Player entered the Next Stage Point");
-    //}
 }
