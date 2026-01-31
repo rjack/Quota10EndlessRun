@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -35,8 +36,8 @@ public class GroundGenerationManager : MonoBehaviour
     //[SerializeField] private GameObject obstaclePrefab;
     [SerializeField] private float worldSpeed = 15f;
 
-    [SerializeField] private PlayerSFXManager playerSfxManager;
-
+    public Action OnEnterEndlessMode;
+    public Action OnEnterSquareMode;
 
     public List<GameObject> activeGroundSegments = new();
     public SpawnPattern currentSpawnPattern;
@@ -58,11 +59,6 @@ public class GroundGenerationManager : MonoBehaviour
         // Update is called once per frame
     void Update()
     {
-        if (worldSpeed > 0f)
-        {
-            // playerSfxManager.PlayWalkSFX();
-        }
-
         switch (state)
         {
             case WorldState.Running:
@@ -84,6 +80,7 @@ public class GroundGenerationManager : MonoBehaviour
 
     void OnSquareEnter()
     {
+        OnEnterSquareMode?.Invoke();
         lastWorldSpeed = worldSpeed;
         worldSpeed = 0f;
         foreach(GameObject seg in groundSegments_static)
@@ -96,6 +93,7 @@ public class GroundGenerationManager : MonoBehaviour
 
     void OnSquareExit()
     {
+        OnEnterEndlessMode?.Invoke();
         worldSpeed = lastWorldSpeed;
         counterSegmentsLeft = 5; // reset segments to run before next square
         state = WorldState.Running;
