@@ -38,6 +38,8 @@ public class GroundGenerationManager : MonoBehaviour
     public int spawnPatternCounter = -1;
     public int counterSegmentsLeft = 1;
     public float lastWorldSpeed;
+    private float destroySquare = 1f;
+    private bool isSquareActive = false;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -84,13 +86,26 @@ public class GroundGenerationManager : MonoBehaviour
         worldSpeed = lastWorldSpeed;
         counterSegmentsLeft = 5; // reset segments to run before next square
         state = WorldState.Running;
-        activeGroundSegments.Remove(activeSquare);
+        activeGroundSegments.Clear();
+        activeGroundSegments.AddRange(groundSegments);
+        activeGroundSegments.Add(activeSquare);
         activeSquare = null;
         Debug.Log("Square Exited: resetting to RUNNING state");
     }
 
     void MoveWorld()
     {
+        if (isSquareActive)
+        {
+            destroySquare -= Time.deltaTime;
+            if (destroySquare <= 0f)
+            {
+                Destroy(activeSquare);
+                isSquareActive = false;
+                destroySquare = 1f;
+            }
+        }
+        Debug.Log("Moving world at speed: " + worldSpeed);
         Vector3 delta = Vector3.back * worldSpeed * Time.deltaTime;
 
         foreach (GameObject seg in activeGroundSegments)
