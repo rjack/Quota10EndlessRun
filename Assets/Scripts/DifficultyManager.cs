@@ -7,7 +7,7 @@ public class DifficultyManager : MonoBehaviour
     [SerializeField] private AnimationCurve scoreMultiplierCurve;
 
     private float speedMultiplier = 1f;
-    private float speedFactor = .1f;
+    [SerializeField] private float speedFactor = .1f;
 
     public static float ScoreMultiplier = 1f;
     public static float SpeedMultiplier = 1f;
