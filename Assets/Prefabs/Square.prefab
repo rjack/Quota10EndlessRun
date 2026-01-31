@@ -173,7 +173,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4262619421766040795}
   - component: {fileID: 4330279888431675050}
-  - component: {fileID: 3652091399157060175}
+  - component: {fileID: 242059749053613165}
   m_Layer: 0
   m_Name: NextStagePoint
   m_TagString: Untagged
@@ -210,8 +210,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NextStagePoint
   radius: 2.5
---- !u!136 &3652091399157060175
-CapsuleCollider:
+--- !u!65 &242059749053613165
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -220,7 +220,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -228,10 +228,8 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 2.5
-  m_Height: 1
-  m_Direction: 1
+  serializedVersion: 3
+  m_Size: {x: 4.766483, y: 7.144455, z: 2.354056}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1472397930737208889
 GameObject:
@@ -439,7 +437,7 @@ MonoBehaviour:
   percentActorPedestrians: 0.5
   percentOtherPedestrians: 0.4
   percentPolicePedestrians: 0.1
-  entryPoint: {fileID: 5481507699834409638}
+  southGate: {fileID: 0}
 --- !u!1 &2223938716270614937
 GameObject:
   m_ObjectHideFlags: 0
@@ -1233,7 +1231,7 @@ Transform:
   m_GameObject: {fileID: 5472695336979700349}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.05908, y: 0.5, z: -8.3932}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1373,8 +1371,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2176670283802200208}
-  - component: {fileID: 4231646164922187692}
   - component: {fileID: 5481507699834409638}
+  - component: {fileID: 3510465721037011646}
   m_Layer: 0
   m_Name: EntryPoint
   m_TagString: Untagged
@@ -1398,29 +1396,6 @@ Transform:
   - {fileID: 6088975782917906389}
   m_Father: {fileID: 9192034451166452781}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &4231646164922187692
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7880323195317167960}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 2.5
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5481507699834409638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1434,6 +1409,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntryPoint
   radius: 2.5
+--- !u!65 &3510465721037011646
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7880323195317167960}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.766483, y: 7.144455, z: 2.354056}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8129968416936581233
 GameObject:
   m_ObjectHideFlags: 0
