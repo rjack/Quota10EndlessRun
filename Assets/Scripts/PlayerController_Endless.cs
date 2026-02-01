@@ -18,6 +18,8 @@ public class PlayerController_Endless : MonoBehaviour
     [SerializeField] private float returnSpeed = 5f;
     [SerializeField] private float invincibilityDuration = 2f;
     [SerializeField] private PlayerSFXManager playerSfxManager;
+    [SerializeField] private Color hurtColor = Color.red;
+    [SerializeField] private float blinkInterval = 0.1f;
 
     public Rigidbody rb;
     public bool isGrounded;
@@ -35,6 +37,9 @@ public class PlayerController_Endless : MonoBehaviour
     public static bool isDead = false;
     private Coroutine hurtCoroutine;
     private Coroutine invincibilityCoroutine;
+    private Renderer[] renderers;
+    private Color[] originalColors;
+    private Coroutine blinkCoroutine;
 
     public Action OnPlayerDeath;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -42,7 +47,15 @@ public class PlayerController_Endless : MonoBehaviour
     {
         isDead = false;
         rb = GetComponent<Rigidbody>();
-        
+
+        renderers = GetComponentsInChildren<Renderer>();
+        originalColors = new Color[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            originalColors[i] = renderers[i].material.color;
+        }
+
         InputManager.OnPlayerMovement += HandlePlayerInput;
         InputManager.OnPlayerJump += HandlePlayerJump;
 
@@ -179,6 +192,7 @@ public class PlayerController_Endless : MonoBehaviour
             {
                 hurtCoroutine = StartCoroutine(HurtRoutine());
                 invincibilityCoroutine = StartCoroutine(InvincibilityRoutine());
+                blinkCoroutine = StartCoroutine(BlinkInvincibilityRoutine());
             }
         }
         if (collision.gameObject.CompareTag("OneshotObstacle"))
@@ -208,6 +222,32 @@ public class PlayerController_Endless : MonoBehaviour
         isHurt = false;
         hp += 1;
     }
+
+    private IEnumerator BlinkInvincibilityRoutine()
+    {
+        bool isRed = false;
+
+        while (isInvincible)
+        {
+            isRed = !isRed;
+
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                renderers[i].material.color = isRed ? hurtColor : originalColors[i];
+            }
+
+            yield return new WaitForSeconds(blinkInterval);
+        }
+
+        // Ripristino finale
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].material.color = originalColors[i];
+        }
+
+        blinkCoroutine = null;
+    }
+
 
 
     //private void ApplyKnockback()
