@@ -49,6 +49,7 @@ public class GameOverUI : MonoBehaviour
 
    private void Awake()
    {
+      panel.gameObject.SetActive(false);
       endlessPlayerController.OnPlayerDeath += ActivateGameOver;
       returnToMainMenuBtn.onClick.AddListener(() => SceneManager.LoadScene(0));
       returnToMainMenuBtn.gameObject.SetActive(false);
