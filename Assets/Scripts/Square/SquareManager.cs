@@ -36,20 +36,22 @@ public class SquareManager : MonoBehaviour
 
     private IEnumerator SpawnPassants()
     {
-        // Spawn Pedestrians
-        for (int i = 0; i < numberOfPedestriansToSpawn; i++)
+
+        while (gameObject.activeInHierarchy)
         {
-            if (currentPedestrianCount >= maxPedestriansCanSpawnInSquare)
+            // Spawn Pedestrians
+            for (int i = 0; i < numberOfPedestriansToSpawn; i++)
             {
-                yield break;
+                if (currentPedestrianCount >= maxPedestriansCanSpawnInSquare)
+                {
+                    yield break;
+                }
+
+                SpawnPedestrian();
             }
 
-            SpawnPedestrian();
+            yield return new WaitForSeconds(pedestrianSpawnInterval);
         }
-
-        yield return new WaitForSeconds(pedestrianSpawnInterval);
-
-        StartCoroutine(SpawnPassants());
 
     }
 
