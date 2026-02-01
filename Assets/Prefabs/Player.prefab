@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 633690027472133718}
   - component: {fileID: 3952928250820660436}
   - component: {fileID: 5375548566068545444}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CH_pile_E
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -401,7 +401,7 @@ GameObject:
   - component: {fileID: 4424509726048275563}
   - component: {fileID: 6731104819083579400}
   - component: {fileID: 1863809619201475349}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CH_pile_I
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -904,7 +904,7 @@ GameObject:
   - component: {fileID: 1793147299276029256}
   - component: {fileID: 5107260870268104128}
   - component: {fileID: 5269199536573211313}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CH_pile_F
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1285,7 +1285,7 @@ GameObject:
   - component: {fileID: 3864764737829298987}
   - component: {fileID: 2061671824560831216}
   - component: {fileID: 8489670128479749236}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CH_pile_J
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1407,7 +1407,7 @@ GameObject:
   - component: {fileID: 3020205712147617663}
   - component: {fileID: 4795256746638065696}
   - component: {fileID: 8897779710555147492}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CH_pile_G
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1562,7 +1562,7 @@ GameObject:
   - component: {fileID: 112699759692604156}
   - component: {fileID: 3384075523775463465}
   - component: {fileID: 3228037570642773545}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PR_carretto
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1882,7 +1882,7 @@ GameObject:
   - component: {fileID: 4027639309245100336}
   - component: {fileID: 2065353417617670454}
   - component: {fileID: 7342647795746042250}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CH_pile_C
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2453,7 +2453,7 @@ GameObject:
   - component: {fileID: 8059134546756982869}
   - component: {fileID: 583743101838058147}
   - component: {fileID: 8450805090835511881}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CH_pile_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2606,7 +2606,7 @@ GameObject:
   - component: {fileID: 3419623294168720851}
   - component: {fileID: 6875297213333980274}
   - component: {fileID: 5579882705761631987}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CH_pile_H
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2728,7 +2728,7 @@ GameObject:
   - component: {fileID: 6223474785690116811}
   - component: {fileID: 6198368050452152630}
   - component: {fileID: 4325930009021781822}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CH_pile_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2819,7 +2819,7 @@ GameObject:
   - component: {fileID: 5939323793133693462}
   - component: {fileID: 5460550464219788427}
   - component: {fileID: 8948187555129569947}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PR_carretto_full_V001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2875,9 +2875,9 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 0
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!82 &5460550464219788427
 AudioSource:
@@ -3079,7 +3079,7 @@ GameObject:
   - component: {fileID: 3366917441942204400}
   - component: {fileID: 2129416761397989605}
   - component: {fileID: 139411274686337529}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CH_pile_D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
