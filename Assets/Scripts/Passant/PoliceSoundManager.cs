@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PoliceSoundManager : MonoBehaviour
 {
@@ -7,31 +9,35 @@ public class PoliceSoundManager : MonoBehaviour
 
     private AudioSource audioSource;
 
+
+    private float currTimeInState = 0;
+    private float delay = 5;
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
+       delay = Random.Range(5f, 15f);
     }
 
-    private void Start()
+    private void Update()
     {
-        PlayRandomSound();
+        
+        currTimeInState += Time.deltaTime;
+        if (currTimeInState >= delay)
+        {
+            currTimeInState = 0;
+            delay = Random.Range(5f, 15f);
+            if (Random.value < 0.5f)
+            {
+                PlayWhistle();
+            }
+            else
+            {
+                PlayHey();
+            }
+        }
+        
     }
 
-    private void PlayRandomSound()
-    {
-        float delay = Random.Range(5f, 15f);
-        Invoke("PlayRandomSound", delay);
-        if (Random.value < 0.5f)
-        {
-            PlayWhistle();
-        }
-        else
-        {
-            PlayHey();
-        }
-
-        PlayRandomSound();
-    }
 
     public void PlayWhistle()
     {
