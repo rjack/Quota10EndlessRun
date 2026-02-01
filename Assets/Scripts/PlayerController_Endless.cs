@@ -299,12 +299,6 @@ public class PlayerController_Endless : MonoBehaviour
         this.enabled = true;
     }
 
-    private void OnDrawGizmos()
-    {
-        Handles.color = Color.green;
-        Handles.DrawLine(originPoint + new Vector3(0,yOffset,0), originPoint + new Vector3(0, yOffset, 0)  + (Vector3.forward * 40));
-        Handles.DrawLine(originPoint + new Vector3(0, yOffset, 0) - Vector3.left*5, originPoint + new Vector3(0, yOffset, 0) - Vector3.left * 5 + (Vector3.forward * 40));
-        Handles.DrawLine(originPoint + new Vector3(0, yOffset, 0) + Vector3.left*5, originPoint + new Vector3(0, yOffset, 0) + Vector3.left * 5 + (Vector3.forward * 40));
-    }
+
 
 }
