@@ -164,7 +164,7 @@ MonoBehaviour:
   squareEntryOffset: 5
   playerPrefab: {fileID: 190950223}
   destroyAtZ: -50
-  worldSpeed: 50
+  worldSpeed: 20
   activeGroundSegments: []
   activePatterns: []
   activeSquare: {fileID: 0}

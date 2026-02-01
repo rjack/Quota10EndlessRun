@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -15,21 +16,25 @@ public class PlayerController_Endless : MonoBehaviour
     [SerializeField] private float knockbackDistance = 4f;
     [SerializeField] private float knockbackSpeed = 10f;
     [SerializeField] private float returnSpeed = 5f;
-
+    [SerializeField] private float invincibilityDuration = 2f;
     [SerializeField] private PlayerSFXManager playerSfxManager;
 
-    private Rigidbody rb;
-    private bool isGrounded;
-    private int currentLane = 1; // 0 = left, 1 = middle, 2 = right
-    private Vector3 targetPosition;
-    private Vector3 originPoint;
-    private int hp = 2; // va pi� lento ad un hp, ma pu� recuperarlo.
-    private bool isHurt = false;
-    private float healTimer = 0f;
-    private float baseZ;
-    private float targetZ;
-    private bool returning = false;
+    public Rigidbody rb;
+    public bool isGrounded;
+    public int currentLane = 1; // 0 = left, 1 = middle, 2 = right
+    public Vector3 targetPosition;
+    public Vector3 originPoint;
+    public int hp = 2; // va pi� lento ad un hp, ma pu� recuperarlo.
+    public bool isHurt = false;
+    public float healTimer = 0f;
+    public float baseZ;
+    public float targetZ;
+    public bool returning = false;
+    public bool isInvincible = false;
+    public float invincibilityTimer = 0f;
     public static bool isDead = false;
+    private Coroutine hurtCoroutine;
+    private Coroutine invincibilityCoroutine;
 
     public Action OnPlayerDeath;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -50,6 +55,8 @@ public class PlayerController_Endless : MonoBehaviour
 
         baseZ = transform.position.z;
         targetZ = baseZ;
+        invincibilityTimer = invincibilityDuration;
+        healTimer = healTime;
     }
 
     void OnDestroy()
@@ -74,35 +81,38 @@ public class PlayerController_Endless : MonoBehaviour
         transform.position = pos;
 
         // HURT
-        if (isHurt)
-        {
-            playerSfxManager.PlayHurtSFX();
+        //if (isHurt)
+        //{
+        //    checkInvincibility();
+        //    playerSfxManager.PlayHurtSFX();
 
-            float speed = returning ? returnSpeed : knockbackSpeed;
+        //    float speed = returning ? returnSpeed : knockbackSpeed;
 
-            Vector3 curr_pos = transform.position;
-            curr_pos.z = Mathf.Lerp(curr_pos.z, targetZ, speed * Time.deltaTime);
-            transform.position = curr_pos;
+        //    Vector3 curr_pos = transform.position;
+        //    curr_pos.z = Mathf.Lerp(curr_pos.z, targetZ, speed * Time.deltaTime);
+        //    transform.position = curr_pos;
 
-            healTimer -= Time.deltaTime;
+        //    healTimer -= Time.deltaTime;
 
-            if (healTimer <= 0f)
-            {
-                Debug.Log("RETUNING TO ORIGINAL POS!");
-                healTimer = healTime;
-                ReturnToOriginalPos();
-            }
-        }
-
-        // HEALED
-        if (returning && Mathf.Abs(transform.position.z - baseZ) < 0.05f)
-        {
-            isHurt = false;
-            returning = false;
-            hp = 2;
-        }
+        //    if (healTimer <= 0f)
+        //    {
+        //        Debug.Log("RETUNING TO ORIGINAL POS!");
+        //        healTimer = healTime;
+        //        //ReturnToOriginalPos();
+        //        isHurt = false;
+        //    }
+        //}
     }
 
+    private void checkInvincibility() 
+    {
+        invincibilityTimer -= Time.deltaTime;
+        if (invincibilityTimer <= 0f)
+        {
+            isInvincible = false;
+            invincibilityTimer = invincibilityDuration;
+        }
+    }
     private void HandlePlayerJump()
     {
 
@@ -150,6 +160,9 @@ public class PlayerController_Endless : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (isInvincible || isDead)
+            return;
+
         if (collision.gameObject.CompareTag("Ground"))
             isGrounded = true;
 
@@ -164,7 +177,8 @@ public class PlayerController_Endless : MonoBehaviour
             }
             else
             {
-                ApplyKnockback();
+                hurtCoroutine = StartCoroutine(HurtRoutine());
+                invincibilityCoroutine = StartCoroutine(InvincibilityRoutine());
             }
         }
         if (collision.gameObject.CompareTag("OneshotObstacle"))
@@ -173,22 +187,43 @@ public class PlayerController_Endless : MonoBehaviour
             OnPlayerDeath?.Invoke();
         }
         
+
     }
 
-    private void ApplyKnockback()
+    private IEnumerator InvincibilityRoutine()
+    {
+        isInvincible = true;
+
+        yield return new WaitForSeconds(invincibilityDuration);
+
+        isInvincible = false;
+    }
+
+    private IEnumerator HurtRoutine()
     {
         isHurt = true;
-        returning = false;
 
-        healTimer = healTime;
-        targetZ = baseZ - knockbackDistance;
+        yield return new WaitForSeconds(healTime);
+
+        isHurt = false;
+        hp += 1;
     }
 
-    private void ReturnToOriginalPos()
-    {
-        returning = true;
-        targetZ = baseZ;
-    }
+
+    //private void ApplyKnockback()
+    //{
+    //    isHurt = true;
+    //    returning = false;
+
+    //    healTimer = healTime;
+    //    targetZ = baseZ - knockbackDistance;
+    //}
+
+    //private void ReturnToOriginalPos()
+    //{
+    //    returning = true;
+    //    targetZ = baseZ;
+    //}
 
     private void HandlePlayerInput(Vector2 movementInput)
     {
